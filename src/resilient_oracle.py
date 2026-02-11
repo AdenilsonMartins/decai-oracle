@@ -106,10 +106,10 @@ class ResilientOracleSystem:
         prediction_id = f"pred_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{self.predictions_count}"
         
         try:
+            # Ajuste para Contract Manager V2 (Asset, Price, Confidence)
             result = self.contract_manager.store_prediction(
-                prediction_id=prediction_id,
-                model_id=prediction['model_version'],
-                prediction=json.dumps(prediction),
+                asset=prediction['symbol'],
+                predicted_price=prediction['predicted_price'],
                 confidence=prediction['prediction_confidence']
             )
             

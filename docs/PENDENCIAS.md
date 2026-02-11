@@ -83,12 +83,14 @@ Fase 5: Hardening V2.1  [░░░░░░░░░░]   0% ⏳
 
 ### 5. Auditoria Automatizada do Contrato
 
-**Status**: 🔄 Em Progresso (Script de automação criado)
+### 5. Auditoria Automatizada do Contrato
+
+**Status**: ⚠️ Script Pronto / Bloqueado Localmente (Windows)
 
 **Tarefas:**
 - [x] Criar script de auditoria: `scripts/security_audit.py`
-- [ ] Instalar Slither: `pip install slither-analyzer` (Requer solc)
-- [ ] Executar: `python scripts/security_audit.py`
+- [ ] Instalar Slither: `pip install slither-analyzer` (Falhou no ambiente Windows atual)
+- [ ] Executar: `python scripts/security_audit.py` (Requer Linux ou Docker Container)
 - [ ] Corrigir findings de severidade **High** e **Medium**
 - [ ] Documentar resultados em `docs/security/SLITHER_REPORT.md`
 
@@ -96,12 +98,12 @@ Fase 5: Hardening V2.1  [░░░░░░░░░░]   0% ⏳
 
 ### 6. Cobertura de Testes
 
-**Status**: 🔄 Em Progresso (44% Total)
+**Status**: 🔄 Em Progresso (51% Total)
 
 **Tarefas:**
 - [x] Executar: `pytest --cov=src tests/ --cov-report=html` (Relatório gerado)
-- [ ] Meta: > 80% de cobertura (Atual: 44%)
-- [ ] **Prioridade**: Adicionar testes para `src/resilient_oracle.py` (0% atual)
+- [x] **Adicionar testes para `src/resilient_oracle.py` (Cobertura 65% ✅)**
+- [ ] Meta: > 80% de cobertura (Atual: 51%)
 - [ ] Adicionar testes para `src/social/twitter_bot.py`
 - [ ] Adicionar testes para `src/api/middleware.py`
 - [ ] Adicionar testes para `src/monitoring/metrics.py`

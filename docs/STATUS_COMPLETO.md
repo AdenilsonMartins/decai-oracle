@@ -167,7 +167,8 @@ O **DecAI Oracle** é um sistema descentralizado de previsão de preços baseado
 |------|---------|--------|
 | **Docker** | `Dockerfile`, `docker-compose.yml` | ✅ Configurado |
 | **Prod Env** | `.env.production.example` | ✅ Template criado |
-| **Sec. Audit** | `scripts/security_audit.py` | ✅ Script pronto |
+| **Sec. Audit** | `scripts/security_audit.py` | ⚠️ Script pronto (execução pendente) |
+| **Resilient Tests** | `tests/test_resilient_oracle.py` | ✅ Coverage 65% |
 | **README** | `README.md` | ✅ Completo e profissional |
 | **Quick Start** | `QUICKSTART.md` | ✅ |
 | **Contributing** | `CONTRIBUTING.md` | ✅ |
