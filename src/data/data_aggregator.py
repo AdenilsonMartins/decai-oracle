@@ -369,11 +369,26 @@ class MultiSourceAggregator:
             logger.warning(
                 f"⚠️ Desvio alto detectado ({deviation_pct:.2f}% > {max_deviation}%)"
             )
-            # Remover outliers (valores > 2 desvios padrão da média)
-            valid_results = [
-                r for r in valid_results
-                if abs(r.price - avg_price) <= 2 * std_dev
-            ]
+            
+            # Para conjuntos pequenos (3-5 fontes), removemos quem estiver mais longe da mediana
+            if 2 < len(valid_results) <= 5:
+                median_price = statistics.median(prices)
+                # Ordenar por proximidade da mediana e manter os N-1 melhores
+                valid_results.sort(key=lambda r: abs(r.price - median_price))
+                removed = valid_results.pop()
+                logger.warning(f"🧹 Outlier removido (furthest from median): {removed.source} (${removed.price:,.2f})")
+                
+                # Recalcular métricas básicas após remoção para o objeto final
+                prices = [r.price for r in valid_results]
+                avg_price = statistics.mean(prices)
+                std_dev = statistics.stdev(prices) if len(prices) > 1 else 0
+                deviation_pct = (std_dev / avg_price * 100) if avg_price > 0 else 0
+            else:
+                # Para conjuntos maiores, usamos o desvio padrão (Z-score > 2)
+                valid_results = [
+                    r for r in valid_results
+                    if abs(r.price - avg_price) <= 2 * std_dev
+                ]
             
             if len(valid_results) < min_sources:
                 logger.error("❌ Muitos outliers, dados não confiáveis")
