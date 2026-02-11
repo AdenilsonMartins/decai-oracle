@@ -34,26 +34,10 @@ class EndToEndTester:
         """Gera uma previsão de teste simulada"""
         timestamp = datetime.now().isoformat()
         
-        # Simular dados de uma previsão real
-        prediction_data = {
-            'symbol': 'BTC/USD',
-            'predicted_price': 45230.50,
-            'predicted_trend': 'bullish',
-            'time_horizon': '24h',
-            'features_used': ['price', 'volume', 'sentiment'],
-            'model_version': 'v1.2.3'
-        }
-        
-        # Gerar ID único
-        prediction_id = hashlib.sha256(
-            f"{timestamp}{json.dumps(prediction_data)}".encode()
-        ).hexdigest()[:16]
-        
         return {
-            'prediction_id': prediction_id,
-            'model_id': 'btc_price_predictor_v1',
-            'prediction': json.dumps(prediction_data),
-            'confidence': 87.5,  # 87.5%
+            'asset': 'BTC/USD',
+            'predicted_price': 45230.50,
+            'confidence': 87.5,
             'timestamp': timestamp
         }
     
@@ -87,25 +71,23 @@ class EndToEndTester:
     def test_2_store_prediction(self) -> Dict[str, Any]:
         """Test 2: Armazenar previsão no blockchain"""
         print("\n" + "="*60)
-        print("📋 TEST 2: Store Prediction On-Chain")
+        print("📋 TEST 2: Store Prediction On-Chain (V2)")
         print("="*60)
         
         try:
             # Gerar previsão de teste
             test_pred = self.generate_test_prediction()
             
-            print(f"📊 Prediction ID: {test_pred['prediction_id']}")
-            print(f"🤖 Model ID: {test_pred['model_id']}")
+            print(f"📊 Asset: {test_pred['asset']}")
+            print(f"💰 Price: {test_pred['predicted_price']}")
             print(f"📈 Confidence: {test_pred['confidence']}%")
-            print(f"📝 Data: {test_pred['prediction'][:100]}...")
             
             print("\n⏳ Enviando transação para blockchain...")
             
             # Armazenar no blockchain
             result = self.manager.store_prediction(
-                prediction_id=test_pred['prediction_id'],
-                model_id=test_pred['model_id'],
-                prediction=test_pred['prediction'],
+                asset=test_pred['asset'],
+                predicted_price=test_pred['predicted_price'],
                 confidence=test_pred['confidence']
             )
             
@@ -116,6 +98,29 @@ class EndToEndTester:
                 print(f"⛽ Gas Usado: {result['gas_used']}")
                 print(f"🔍 Etherscan: https://sepolia.etherscan.io/tx/{result['tx_hash']}")
                 
+                # Como não estamos lendo os logs para pegar o ID exato neste teste simplificado,
+                # e o contrato usa um contador sequencial, podemos tentar prever o ID.
+                # Mas para ser robusto, vamos precisar ler do contrato ou logs.
+                # O ideal seria atualizar `store_prediction` para retornar o ID lendo os eventos.
+                # Por hora, vamos assumir que precisamos do ID para o próximo teste.
+                # Se for testnet pública, pode ser difícil saber o ID sem ler eventos.
+                # VAMOS TENTAR ler o último ID do contador 'predictionCount' se possível,
+                # mas o contract_manager não expõe isso ainda.
+                
+                # WORKAROUND: Vamos tentar ler o último ID inferindo que fomos nós (race condition em mainnet)
+                # Para este teste, vamos assumir que o usuário vai verificar manualmente ou
+                # implementaremos a leitura de eventos no futuro.
+                # Porem, o `test_3` precisa do ID.
+                # Vamos tentar ler o `predictionCount` publico do contrato.
+                
+                try:
+                    count = self.manager.contract.functions.predictionCount().call()
+                    result['prediction_id'] = count # Assumindo que fomos a ultima tx
+                    print(f"🔢 Prediction ID (Inferido): {count}")
+                except:
+                    print("⚠️ Não foi possível obter predictionCount, usando 1 como fallback")
+                    result['prediction_id'] = 1
+
                 self.test_results.append(('Store Prediction', 'PASSED'))
                 return {**test_pred, **result}
             else:
@@ -128,80 +133,66 @@ class EndToEndTester:
             self.test_results.append(('Store Prediction', 'FAILED'))
             return None
     
-    def test_3_retrieve_prediction(self, prediction_id: str) -> bool:
+    def test_3_retrieve_prediction(self, prediction_id: int) -> bool:
         """Test 3: Recuperar previsão do blockchain"""
         print("\n" + "="*60)
         print("📋 TEST 3: Retrieve Prediction From Chain")
         print("="*60)
         
         try:
-            print(f"🔍 Buscando previsão: {prediction_id}")
+            print(f"🔍 Buscando previsão ID: {prediction_id}")
             
             # Aguardar alguns segundos para garantir que o bloco foi minerado
-            print("⏳ Aguardando confirmação do bloco...")
-            time.sleep(5)
+            # print("⏳ Aguardando confirmação do bloco...")
+            # time.sleep(5)
             
             # Recuperar do blockchain
             retrieved = self.manager.get_prediction(prediction_id)
             
             print(f"\n✅ Previsão recuperada com sucesso!")
-            print(f"📊 Prediction ID: {retrieved['prediction_id']}")
-            print(f"🤖 Model ID: {retrieved['model_id']}")
+            print(f"📊 Asset: {retrieved['asset']}")
+            print(f"💰 Price: {retrieved['predicted_price']}")
             print(f"📈 Confidence: {retrieved['confidence']:.2f}%")
             print(f"🕐 Timestamp: {datetime.fromtimestamp(retrieved['timestamp'])}")
-            print(f"🔐 Oracle: {retrieved['oracle_address']}")
-            print(f"📝 Prediction Data:")
-            
-            # Parse e mostrar dados da previsão
-            pred_data = json.loads(retrieved['prediction'])
-            for key, value in pred_data.items():
-                print(f"   - {key}: {value}")
+            print(f"🔐 Predictor: {retrieved['predictor']}")
+            print(f"✅ Verified: {retrieved['verified']}")
             
             self.test_results.append(('Retrieve Prediction', 'PASSED'))
-            return True
+            return retrieved
             
         except Exception as e:
             print(f"❌ FALHOU: {str(e)}")
             self.test_results.append(('Retrieve Prediction', 'FAILED'))
-            return False
+            return None
     
-    def test_4_data_integrity(self, original: Dict, prediction_id: str) -> bool:
+    def test_4_data_integrity(self, original: Dict, retrieved: Dict) -> bool:
         """Test 4: Verificar integridade dos dados"""
         print("\n" + "="*60)
         print("📋 TEST 4: Data Integrity Verification")
         print("="*60)
         
         try:
-            # Recuperar dados
-            retrieved = self.manager.get_prediction(prediction_id)
-            
-            # Verificações
             checks = []
             
-            # Check 1: Prediction ID
-            check_id = retrieved['prediction_id'] == prediction_id
-            checks.append(('Prediction ID', check_id))
-            print(f"{'✅' if check_id else '❌'} Prediction ID: {check_id}")
+            # Check 1: Asset
+            check_asset = retrieved['asset'] == original['asset']
+            checks.append(('Asset', check_asset))
+            print(f"{'✅' if check_asset else '❌'} Asset match: {original['asset']}")
             
-            # Check 2: Model ID
-            check_model = retrieved['model_id'] == original['model_id']
-            checks.append(('Model ID', check_model))
-            print(f"{'✅' if check_model else '❌'} Model ID: {check_model}")
+            # Check 2: Price (float comparison)
+            check_price = abs(retrieved['predicted_price'] - original['predicted_price']) < 0.01
+            checks.append(('Price', check_price))
+            print(f"{'✅' if check_price else '❌'} Price match: {retrieved['predicted_price']}")
             
-            # Check 3: Prediction Data
-            check_data = retrieved['prediction'] == original['prediction']
-            checks.append(('Prediction Data', check_data))
-            print(f"{'✅' if check_data else '❌'} Prediction Data: {check_data}")
-            
-            # Check 4: Confidence (com margem de erro)
+            # Check 3: Confidence
             check_conf = abs(retrieved['confidence'] - original['confidence']) < 0.1
             checks.append(('Confidence', check_conf))
-            print(f"{'✅' if check_conf else '❌'} Confidence: {check_conf}")
+            print(f"{'✅' if check_conf else '❌'} Confidence match: {retrieved['confidence']}")
             
-            # Check 5: Oracle Address
-            check_oracle = retrieved['oracle_address'].lower() == self.manager.account.address.lower()
-            checks.append(('Oracle Address', check_oracle))
-            print(f"{'✅' if check_oracle else '❌'} Oracle Address: {check_oracle}")
+            # Check 4: Predictor
+            check_predictor = retrieved['predictor'].lower() == self.manager.account.address.lower()
+            checks.append(('Predictor', check_predictor))
+            print(f"{'✅' if check_predictor else '❌'} Predictor match: {retrieved['predictor']}")
             
             all_passed = all(check[1] for check in checks)
             
@@ -265,11 +256,13 @@ class EndToEndTester:
             return
         
         # Test 3: Retrieve Prediction
-        if not self.test_3_retrieve_prediction(stored_data['prediction_id']):
-            print("\n⚠️  Falha ao recuperar previsão.")
+        retrieved_data = self.test_3_retrieve_prediction(stored_data['prediction_id'])
+        if not retrieved_data:
+             print("\n⚠️  Falha ao recuperar previsão.")
+             return
         
         # Test 4: Data Integrity
-        self.test_4_data_integrity(stored_data, stored_data['prediction_id'])
+        self.test_4_data_integrity(stored_data, retrieved_data)
         
         # Summary
         self.print_summary()

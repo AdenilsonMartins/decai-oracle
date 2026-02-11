@@ -130,25 +130,33 @@ class ContractManager:
         return [
             {
                 "inputs": [
-                    {"internalType": "string", "name": "_predictionId", "type": "string"},
-                    {"internalType": "string", "name": "_modelId", "type": "string"},
-                    {"internalType": "string", "name": "_prediction", "type": "string"},
-                    {"internalType": "uint256", "name": "_confidence", "type": "uint256"}
+                    {"internalType": "string", "name": "_asset", "type": "string"},
+                    {"internalType": "uint128", "name": "_predictedPrice", "type": "uint128"},
+                    {"internalType": "uint32", "name": "_confidence", "type": "uint32"}
                 ],
                 "name": "storePrediction",
-                "outputs": [],
+                "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
-                "inputs": [{"internalType": "string", "name": "_predictionId", "type": "string"}],
+                "inputs": [{"internalType": "uint256", "name": "_id", "type": "uint256"}],
                 "name": "getPrediction",
                 "outputs": [
-                    {"internalType": "string", "name": "modelId", "type": "string"},
-                    {"internalType": "string", "name": "prediction", "type": "string"},
-                    {"internalType": "uint256", "name": "confidence", "type": "uint256"},
-                    {"internalType": "uint256", "name": "timestamp", "type": "uint256"},
-                    {"internalType": "address", "name": "oracle", "type": "address"}
+                    {
+                        "components": [
+                            {"internalType": "uint128", "name": "predictedPrice", "type": "uint128"},
+                            {"internalType": "uint64", "name": "timestamp", "type": "uint64"},
+                            {"internalType": "uint32", "name": "confidence", "type": "uint32"},
+                            {"internalType": "bool", "name": "verified", "type": "bool"},
+                            {"internalType": "address", "name": "predictor", "type": "address"},
+                            {"internalType": "uint128", "name": "actualPrice", "type": "uint128"},
+                            {"internalType": "string", "name": "asset", "type": "string"}
+                        ],
+                        "internalType": "struct PredictionOracleV2.Prediction",
+                        "name": "",
+                        "type": "tuple"
+                    }
                 ],
                 "stateMutability": "view",
                 "type": "function"
@@ -162,44 +170,46 @@ class ContractManager:
         return float(balance_eth)
     
     def estimate_gas_price(self) -> int:
-        """Estima o preço do gas atual"""
+        """Estima o preço do gas atual com bump de 10% para evitar tx presa"""
         gas_price = self.w3.eth.gas_price
-        max_gas = self.w3.to_wei(os.getenv('MAX_GAS_PRICE_GWEI', '50'), 'gwei')
+        # Bump 10% para garantir que a tx seja incluída rapidamente
+        bumped_price = int(gas_price * 1.1)
+        max_gas = self.w3.to_wei(os.getenv('MAX_GAS_PRICE_GWEI', '100'), 'gwei')
         
-        return min(gas_price, max_gas)
+        return min(bumped_price, max_gas)
     
     def store_prediction(
         self,
-        prediction_id: str,
-        model_id: str,
-        prediction: str,
+        asset: str,
+        predicted_price: float,
         confidence: float
     ) -> Dict[str, Any]:
         """
-        Armazena uma previsão no blockchain
+        Armazena uma previsão no blockchain (V2)
         
         Args:
-            prediction_id: ID único da previsão
-            model_id: ID do modelo ML utilizado
-            prediction: Resultado da previsão (JSON string)
+            asset: Par de ativos (ex: 'BTC/USD')
+            predicted_price: Preço previsto
             confidence: Confiança da previsão (0-100)
         
         Returns:
             Dict com transaction hash e receipt
         """
         try:
-            # Converter confidence para uint256 (0-10000 = 0-100.00%)
+            # Converter confidence para uint32 (0-10000 = 0-100.00%)
             confidence_uint = int(confidence * 100)
+            
+            # Converter price para uint128 (assumindo 8 casas decimais, padrão Chainlink)
+            price_uint = int(predicted_price * 10**8)
             
             # Construir transação
             transaction = self.contract.functions.storePrediction(
-                prediction_id,
-                model_id,
-                prediction,
+                asset,
+                price_uint,
                 confidence_uint
             ).build_transaction({
                 'from': self.account.address,
-                'nonce': self.w3.eth.get_transaction_count(self.account.address),
+                'nonce': self.w3.eth.get_transaction_count(self.account.address, 'pending'),
                 'gas': int(os.getenv('GAS_LIMIT', '500000')),
                 'gasPrice': self.estimate_gas_price(),
             })
@@ -218,11 +228,22 @@ class ContractManager:
             
             # Aguardar confirmação
             logger.info("⏳ Aguardando confirmação...")
-            tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+            tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash, timeout=300)
             
             if tx_receipt['status'] == 1:
                 logger.info(f"✅ Previsão armazenada com sucesso!")
                 logger.info(f"⛽ Gas usado: {tx_receipt['gasUsed']}")
+                
+                # Decodificar logs para obter o ID
+                # (Simplificação: assumindo que o ID está nos logs ou retornaremos o tx receipt)
+                # Em V2, a função retorna o ID, mas eth_sendRawTransaction retorna o hash.
+                # Precisaríamos ler o evento PredictionStored para pegar o ID.
+                prediction_id = "unknown" # Placeholder até lermos os eventos
+                
+                # Tentar extrair do evento se possível (requer ABI completo)
+                # logs = self.contract.events.PredictionStored().process_receipt(tx_receipt)
+                # if logs: prediction_id = logs[0]['args']['id']
+                
             else:
                 logger.error("❌ Transação falhou!")
             
@@ -231,19 +252,19 @@ class ContractManager:
                 'tx_hash': tx_hash.hex(),
                 'block_number': tx_receipt['blockNumber'],
                 'gas_used': tx_receipt['gasUsed'],
-                'prediction_id': prediction_id
+                'asset': asset
             }
             
         except Exception as e:
             logger.error(f"❌ Erro ao armazenar previsão: {str(e)}")
             raise
     
-    def get_prediction(self, prediction_id: str) -> Dict[str, Any]:
+    def get_prediction(self, prediction_id: int) -> Dict[str, Any]:
         """
         Recupera uma previsão do blockchain
         
         Args:
-            prediction_id: ID da previsão
+            prediction_id: ID numérico da previsão
         
         Returns:
             Dict com os dados da previsão
@@ -251,13 +272,19 @@ class ContractManager:
         try:
             result = self.contract.functions.getPrediction(prediction_id).call()
             
+            # Contract returns Prediction struct:
+            # (uint128 predictedPrice, uint64 timestamp, uint32 confidence,
+            #  bool verified, address predictor, uint128 actualPrice, string asset)
+            
             prediction_data = {
                 'prediction_id': prediction_id,
-                'model_id': result[0],
-                'prediction': result[1],
-                'confidence': result[2] / 100,  # Converter de uint para float
-                'timestamp': result[3],
-                'oracle_address': result[4]
+                'predicted_price': result[0] / 10**8,
+                'timestamp': result[1],
+                'confidence': result[2] / 100,
+                'verified': result[3],
+                'predictor': result[4],
+                'actual_price': result[5] / 10**8,
+                'asset': result[6],
             }
             
             logger.info(f"✅ Previsão recuperada: {prediction_id}")

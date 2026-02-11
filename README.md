@@ -123,21 +123,14 @@ cp .env.example .env
 # 1. Run basic prediction
 python src/main.py
 
-# 2. Launch interactive dashboard
-streamlit run dashboard/app.py
+# 2. Launch interactive premium dashboard
+streamlit run src/dashboard/app.py
 
 # 3. Try gas fees predictor
 python src/ml/gas_fees_predictor.py
 
 # 4. Check accuracy tracking
 python src/ml/accuracy_tracker.py
-
-# 5. Simulate Twitter bot
-python src/social/twitter_bot.py
-
-# 6. Deploy smart contract to Sepolia testnet
-cd contracts
-npx hardhat run scripts/deploy.js --network sepolia
 ```
 
 📖 **See [QUICKSTART.md](./QUICKSTART.md) for detailed 5-minute setup guide**
@@ -147,20 +140,15 @@ npx hardhat run scripts/deploy.js --network sepolia
 ## 📚 Documentation
 
 ### Getting Started
-- 📋 [**Executive Summary**](./docs/EXECUTIVE_SUMMARY.md) - ⭐ START HERE - Complete overview
-- 🚀 [**Deployment Plan**](./docs/DEPLOYMENT_PLAN.md) - Step-by-step deployment guide
+- 🚀 [**Deployment Guide**](./docs/DEPLOY_GUIDE.md) - Step-by-step deployment guide
 - 🔐 [**Environment Setup**](./docs/ENV_SETUP_GUIDE.md) - Configure .env correctly
-- 🖥️ [**Streamlit Deployment**](./docs/STREAMLIT_DEPLOYMENT.md) - Publish dashboard online
-- 📱 [**Social Media Templates**](./docs/SOCIAL_MEDIA_TEMPLATES.md) - Launch content ready to use
+- 📋 [**Implementation Status**](./docs/planning/v2/IMPLEMENTATION_STATUS.md) - Track what's done
 
 ### Project Documentation
-- 📖 [**Setup Guide**](./docs/SETUP_GUIDE.md) - Complete infrastructure setup
-- 🗺️ [**Roadmap**](./docs/ROADMAP.md) - Development phases and timeline
-- 📚 [**Features**](./docs/FEATURES.md) - Complete features documentation
-- 💼 [**Commercial Strategy**](./docs/COMMERCIAL_STRATEGY.md) - Business model and monetization
-- 🔧 [**API Documentation**](./docs/API.md) - REST API reference
+- 🗺️ [**Roadmap V2**](./docs/planning/ROADMAP_V2.md) - Development phases and timeline
+- 🏛️ [**Resilient Architecture**](./docs/planning/v2/RESILIENT_ARCHITECTURE.md) - Technical deep dive
 - 🤝 [**Contributing**](./CONTRIBUTING.md) - How to contribute
-- 📜 [**Architecture**](./docs/ARCHITECTURE.md) - Technical deep dive
+- 🗂️ [**Archive (V1)**](./docs/archive/v1/) - Legacy documentation
 
 ---
 

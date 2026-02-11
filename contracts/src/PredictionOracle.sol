@@ -1,222 +1,140 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 
 /**
  * @title PredictionOracle
- * @dev Stores AI-powered price predictions on-chain with verification
+ * @dev AI-powered price prediction oracle with security hardening
+ * Features:
+ * - Gas optimization (Packed structs)
+ * - AccessControl (Multi-role support)
+ * - Pausable (Emergency stop)
+ * - Custom Errors (Lower gas costs)
  */
-contract PredictionOracle is Ownable, ReentrancyGuard {
+contract PredictionOracle is AccessControl, ReentrancyGuard, Pausable {
     
+    bytes32 public constant PREDICTOR_ROLE = keccak256("PREDICTOR_ROLE");
+    bytes32 public constant VERIFIER_ROLE = keccak256("VERIFIER_ROLE");
+
     struct Prediction {
-        string asset;           // Asset name (e.g., "Bitcoin")
-        uint256 predictedPrice; // Price in USD cents (multiply by 100)
-        uint256 confidence;     // Confidence score (0-10000 for 0-100%)
-        uint256 timestamp;      // When prediction was made
-        address predictor;      // Who made the prediction
-        bool verified;          // Whether prediction was verified
-        uint256 actualPrice;    // Actual price (filled later)
+        uint128 predictedPrice; // Packed: max ~3.4e38, safe for price
+        uint64 timestamp;      // Packed: safe for thousands of years
+        uint32 confidence;     // Packed: 0-10000
+        bool verified;         // Packed
+        address predictor;     // 160 bits
+        uint128 actualPrice;   // Packed
+        string asset;          // String last to minimize gaps
     }
-    
+
     // Storage
     mapping(uint256 => Prediction) public predictions;
     uint256 public predictionCount;
-    
-    // Authorized predictors
-    mapping(address => bool) public authorizedPredictors;
-    
+
+    // Custom Errors
+    error NotAuthorized(address account, bytes32 role);
+    error InvalidAsset();
+    error InvalidPrice();
+    error InvalidConfidence();
+    error PredictionNotFound(uint256 id);
+    error AlreadyVerified(uint256 id);
+
     // Events
     event PredictionStored(
         uint256 indexed id,
         string asset,
-        uint256 predictedPrice,
-        uint256 confidence,
+        uint128 predictedPrice,
+        uint32 confidence,
         address indexed predictor
     );
-    
+
     event PredictionVerified(
         uint256 indexed id,
-        uint256 actualPrice,
+        uint128 actualPrice,
         uint256 accuracy
     );
-    
-    event PredictorAuthorized(address indexed predictor);
-    event PredictorRevoked(address indexed predictor);
-    
-    // Modifiers
-    modifier onlyAuthorized() {
-        require(
-            authorizedPredictors[msg.sender] || msg.sender == owner(),
-            "Not authorized to make predictions"
-        );
-        _;
+
+    constructor() {
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(PREDICTOR_ROLE, msg.sender);
+        _grantRole(VERIFIER_ROLE, msg.sender);
     }
-    
-    constructor() Ownable(msg.sender) {
-        // Owner is automatically authorized
-        authorizedPredictors[msg.sender] = true;
-    }
-    
+
     /**
-     * @dev Store a new prediction on-chain
-     * @param _asset Asset name
-     * @param _predictedPrice Predicted price in USD cents
-     * @param _confidence Confidence score (0-10000)
+     * @dev Store a new prediction with optimized gas usage
      */
     function storePrediction(
-        string memory _asset,
-        uint256 _predictedPrice,
-        uint256 _confidence
-    ) external onlyAuthorized nonReentrant returns (uint256) {
-        require(bytes(_asset).length > 0, "Asset name required");
-        require(_predictedPrice > 0, "Price must be positive");
-        require(_confidence <= 10000, "Confidence must be <= 10000");
+        string calldata _asset,
+        uint128 _predictedPrice,
+        uint32 _confidence
+    ) external onlyRole(PREDICTOR_ROLE) whenNotPaused nonReentrant returns (uint256) {
+        if (bytes(_asset).length == 0) revert InvalidAsset();
+        if (_predictedPrice == 0) revert InvalidPrice();
+        if (_confidence > 10000) revert InvalidConfidence();
+
+        uint256 id = ++predictionCount;
         
-        predictionCount++;
-        
-        predictions[predictionCount] = Prediction({
+        predictions[id] = Prediction({
             asset: _asset,
             predictedPrice: _predictedPrice,
             confidence: _confidence,
-            timestamp: block.timestamp,
+            timestamp: uint64(block.timestamp),
             predictor: msg.sender,
             verified: false,
             actualPrice: 0
         });
-        
-        emit PredictionStored(
-            predictionCount,
-            _asset,
-            _predictedPrice,
-            _confidence,
-            msg.sender
-        );
-        
-        return predictionCount;
+
+        emit PredictionStored(id, _asset, _predictedPrice, _confidence, msg.sender);
+        return id;
     }
-    
+
     /**
-     * @dev Verify a prediction with actual price
-     * @param _id Prediction ID
-     * @param _actualPrice Actual price in USD cents
+     * @dev Verify a prediction (Verifier Role required)
      */
     function verifyPrediction(
         uint256 _id,
-        uint256 _actualPrice
-    ) external onlyAuthorized {
-        require(_id > 0 && _id <= predictionCount, "Invalid prediction ID");
-        require(!predictions[_id].verified, "Already verified");
-        require(_actualPrice > 0, "Actual price must be positive");
+        uint128 _actualPrice
+    ) external onlyRole(VERIFIER_ROLE) whenNotPaused {
+        if (_id == 0 || _id > predictionCount) revert PredictionNotFound(_id);
+        if (_actualPrice == 0) revert InvalidPrice();
         
         Prediction storage pred = predictions[_id];
+        if (pred.verified) revert AlreadyVerified(_id);
+
         pred.verified = true;
         pred.actualPrice = _actualPrice;
-        
-        // Calculate accuracy (percentage difference)
-        uint256 diff = pred.predictedPrice > _actualPrice
-            ? pred.predictedPrice - _actualPrice
-            : _actualPrice - pred.predictedPrice;
-        
-        uint256 accuracy = 10000 - (diff * 10000 / _actualPrice);
-        
+
+        // Calculate accuracy
+        uint256 accuracy;
+        if (pred.predictedPrice > _actualPrice) {
+            uint256 diff = pred.predictedPrice - _actualPrice;
+            accuracy = diff >= _actualPrice ? 0 : 10000 - (diff * 10000 / _actualPrice);
+        } else {
+            uint256 diff = _actualPrice - pred.predictedPrice;
+            accuracy = diff >= _actualPrice ? 0 : 10000 - (diff * 10000 / _actualPrice);
+        }
+
         emit PredictionVerified(_id, _actualPrice, accuracy);
     }
-    
+
     /**
-     * @dev Get prediction details
-     * @param _id Prediction ID
+     * @dev Emergency controls
      */
-    function getPrediction(uint256 _id)
-        external
-        view
-        returns (
-            string memory asset,
-            uint256 predictedPrice,
-            uint256 confidence,
-            uint256 timestamp,
-            address predictor,
-            bool verified,
-            uint256 actualPrice
-        )
-    {
-        require(_id > 0 && _id <= predictionCount, "Invalid prediction ID");
-        Prediction memory pred = predictions[_id];
-        
-        return (
-            pred.asset,
-            pred.predictedPrice,
-            pred.confidence,
-            pred.timestamp,
-            pred.predictor,
-            pred.verified,
-            pred.actualPrice
-        );
+    function pause() external onlyRole(DEFAULT_ADMIN_ROLE) {
+        _pause();
     }
-    
-    /**
-     * @dev Authorize a new predictor
-     * @param _predictor Address to authorize
-     */
-    function authorizePredictor(address _predictor) external onlyOwner {
-        require(_predictor != address(0), "Invalid address");
-        require(!authorizedPredictors[_predictor], "Already authorized");
-        
-        authorizedPredictors[_predictor] = true;
-        emit PredictorAuthorized(_predictor);
+
+    function unpause() external onlyRole(DEFAULT_ADMIN_ROLE) {
+        _unpause();
     }
-    
+
     /**
-     * @dev Revoke predictor authorization
-     * @param _predictor Address to revoke
+     * @dev View function for prediction
      */
-    function revokePredictor(address _predictor) external onlyOwner {
-        require(authorizedPredictors[_predictor], "Not authorized");
-        
-        authorizedPredictors[_predictor] = false;
-        emit PredictorRevoked(_predictor);
-    }
-    
-    /**
-     * @dev Get total number of predictions
-     */
-    function getTotalPredictions() external view returns (uint256) {
-        return predictionCount;
-    }
-    
-    /**
-     * @dev Get predictions by asset (last N)
-     * @param _asset Asset name
-     * @param _count Number of predictions to return
-     */
-    function getPredictionsByAsset(
-        string memory _asset,
-        uint256 _count
-    ) external view returns (uint256[] memory) {
-        uint256[] memory ids = new uint256[](_count);
-        uint256 found = 0;
-        
-        // Search backwards for recent predictions
-        for (uint256 i = predictionCount; i > 0 && found < _count; i--) {
-            if (
-                keccak256(bytes(predictions[i].asset)) ==
-                keccak256(bytes(_asset))
-            ) {
-                ids[found] = i;
-                found++;
-            }
-        }
-        
-        // Resize array if needed
-        if (found < _count) {
-            uint256[] memory result = new uint256[](found);
-            for (uint256 i = 0; i < found; i++) {
-                result[i] = ids[i];
-            }
-            return result;
-        }
-        
-        return ids;
+    function getPrediction(uint256 _id) external view returns (Prediction memory) {
+        if (_id == 0 || _id > predictionCount) revert PredictionNotFound(_id);
+        return predictions[_id];
     }
 }
