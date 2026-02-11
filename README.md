@@ -1,42 +1,56 @@
-# 🔮 DecAI Oracle - Decentralized AI-Powered Oracle
+# 🔮 DecAI Oracle V2 - Resilient & Verifiable
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
-[![Solidity 0.8+](https://img.shields.io/badge/solidity-0.8+-363636.svg)](https://soliditylang.org/)
+DecAI Oracle is a decentralized, AI-powered price prediction system designed for maximum resilience and high-integrity data delivery.
 
-> **Open-source toolkit for AI-powered blockchain oracles with machine learning predictions, on-chain verification, and decentralized governance.**
+## 🛡️ Resilient Architecture (V2)
+The Version 2.0 release introduces a **Resilience Layer** that eliminates Single Points of Failure (SPOF):
+- **Multi-Source Aggregation**: Real-time consensus between Binance, CoinGecko, and CoinCap.
+- **Smart Outlier Detection**: Automatic removal of anomalous data (furthest-from-median) to prevent market manipulation.
+- **Circuit Breaker Pattern**: Isolation of degraded data sources to preserve system performance.
+- **On-Chain Hardening**: Optimized `PredictionOracleV2` contract with Access Control and Gas optimization.
+
+## 🚀 Key Features
+- **FastAPI Production Engine**: Asynchronous API with rate limiting and Redis caching.
+- **Enterprise Monitoring**: Prometheus metrics for real-time observability.
+- **Premium Dashboard**: Streamlit-based interface for visualizing market consensus and AI predictions.
+- **Blockchain Integrity**: Automated storage of predictions on the Sepolia Testnet.
+
+## 🛠️ Quick Start
+
+### 1. Setup Environment
+```bash
+python scripts/setup.py
+```
+Ensure your `.env` contains `INFURA_API_KEY`, `PRIVATE_KEY`, and `PREDICTION_ORACLE_ADDRESS`.
+
+### 2. Run the Dashboard
+```bash
+$env:PYTHONPATH="."
+streamlit run src/dashboard/app.py
+```
+
+### 3. Start Production API
+```bash
+$env:PYTHONPATH="."
+python src/api/main.py
+```
+
+## 📊 Dashboard Preview
+The dashboard provides a real-time view of:
+- **Price Consensus**: Aggregated price from multiple top-tier exchanges.
+- **AI Prediction Horizon**: 24h price forecasts with confidence intervals.
+- **Resilience Health**: Real-time status of all data connectors.
+- **Blockchain Logs**: Verification of on-chain transaction integrity.
+
+## 📄 Documentation
+- [Planning V2](./docs/planning/v2/)
+- [Implementation Status](./docs/planning/v2/IMPLEMENTATION_STATUS.md)
+- [Resilient Architecture](./docs/planning/v2/RESILIENT_ARCHITECTURE.md)
+- [Changelog](./CHANGELOG_V2.md)
 
 ---
-
-## 🌟 Vision
-
-DecAI Oracle bridges the gap between artificial intelligence and blockchain technology, creating a **decentralized prediction oracle** that:
-
-- 🧠 Uses **Machine Learning** to predict crypto prices, gas fees, and market trends
-- ⛓️ Stores predictions **on-chain** with cryptographic verification
-- 🔒 Implements **Zero-Knowledge Proofs** for model verification
-- 🌐 Supports **multi-chain** deployments (Ethereum, Solana, NEAR)
-- 🤝 Enables **federated learning** for decentralized model training
-- 💰 Provides **tokenomics** and DAO governance for sustainability
-
----
-
-## 🎯 Key Features
-
-### Core Functionality
-- ✅ **Real-time Data Collection**: CoinGecko API integration for crypto market data
-- ✅ **ML Predictions**: Linear regression → LSTM neural networks
-- ✅ **On-chain Storage**: Ethereum smart contracts with event logging
-- ✅ **Interactive Dashboard**: Streamlit web app with real-time predictions
-- ✅ **Gas Fees Optimizer**: ML-powered transaction cost optimization
-- ✅ **Accuracy Tracking**: On-chain verification with public leaderboard
-- ✅ **Social Automation**: Twitter bot for daily predictions
-
-### Advanced Features (Roadmap)
-- 🔐 **ZK-Proofs**: Verify ML model integrity without revealing training data
-- 🌍 **Cross-Chain**: Deploy on Ethereum, Polygon, Solana, NEAR
-- 🤖 **Federated Learning**: Decentralized model training with community contributions
-- 🛡️ **Smart Contract Auditing**: AI-powered vulnerability detection
+**Version:** 2.0.0 (Production-Ready)  
+**Status:** Phase 2 Complete (Resilience Integrated)
 - 🏛️ **DAO Governance**: Token-based voting for protocol upgrades
 - 📱 **Telegram Bot**: Interactive predictions via messaging
 - 🔌 **REST API**: Public API for DApp integrations

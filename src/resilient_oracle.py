@@ -14,8 +14,11 @@ import json
 from datetime import datetime
 from typing import Dict, Any
 
-from data_aggregator import MultiSourceAggregator
-from contract_manager_v2 import ContractManager
+from src.data.data_aggregator import MultiSourceAggregator
+from src.blockchain.contract_manager import ContractManager
+from src.ml.predictor import Predictor
+from src.ml.data_collector import DataCollector
+from src.monitoring.metrics import MetricsManager
 
 
 class ResilientOracleSystem:
