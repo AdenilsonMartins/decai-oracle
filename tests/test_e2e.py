@@ -18,9 +18,9 @@ import sys
 from pathlib import Path
 
 # Adicionar path do projeto
-sys.path.append(str(Path(__file__).parent))
-
-from contract_manager_v2 import ContractManager
+# Adicionar a pasta raiz ao sys.path
+sys.path.append(str(Path(__file__).parent.parent))
+from src.blockchain.contract_manager import ContractManager
 
 
 class EndToEndTester:

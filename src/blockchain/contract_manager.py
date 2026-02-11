@@ -14,7 +14,7 @@ import logging
 from typing import Dict, Any, Optional, List
 from pathlib import Path
 from web3 import Web3
-from web3.middleware import geth_poa_middleware
+from web3.middleware import ExtraDataToPOAMiddleware
 from eth_account import Account
 from dotenv import load_dotenv
 
@@ -54,7 +54,7 @@ class ContractManager:
         w3 = Web3(Web3.HTTPProvider(rpc_url))
         
         # Middleware para redes PoA (Proof of Authority) como Sepolia
-        w3.middleware_onion.inject(geth_poa_middleware, layer=0)
+        w3.middleware_onion.inject(ExtraDataToPOAMiddleware, layer=0)
         
         if not w3.is_connected():
             raise ConnectionError("❌ Falha ao conectar na rede Sepolia")
@@ -108,6 +108,7 @@ class ContractManager:
         """Carrega o ABI do contrato a partir do artifact do Hardhat"""
         # Possíveis caminhos para o artifact
         possible_paths = [
+            Path("contracts/artifacts/src/PredictionOracle.sol/PredictionOracle.json"),
             Path("contracts/artifacts/contracts/PredictionOracle.sol/PredictionOracle.json"),
             Path("../contracts/artifacts/contracts/PredictionOracle.sol/PredictionOracle.json"),
             Path("artifacts/contracts/PredictionOracle.sol/PredictionOracle.json"),
