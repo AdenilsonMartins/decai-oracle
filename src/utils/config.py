@@ -2,7 +2,7 @@
 Configuration management using Pydantic Settings
 """
 
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field
 from typing import Optional
 
@@ -10,46 +10,54 @@ from typing import Optional
 class Settings(BaseSettings):
     """Application settings loaded from environment variables"""
     
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,  # Changed to False for better compatibility
+        extra="ignore"          # Allow extra fields in .env without failing
+    )
+    
     # Environment
-    ENVIRONMENT: str = Field(default="development", env="ENVIRONMENT")
-    LOG_LEVEL: str = Field(default="INFO", env="LOG_LEVEL")
+    ENVIRONMENT: str = Field(default="development")
+    LOG_LEVEL: str = Field(default="INFO")
     
     # Blockchain
-    INFURA_API_KEY: Optional[str] = Field(default=None, env="INFURA_API_KEY")
-    SEPOLIA_RPC_URL: Optional[str] = Field(default=None, env="SEPOLIA_RPC_URL")
-    PRIVATE_KEY: Optional[str] = Field(default=None, env="PRIVATE_KEY")
+    INFURA_API_KEY: Optional[str] = Field(default=None)
+    SEPOLIA_RPC_URL: Optional[str] = Field(default=None)
+    PRIVATE_KEY: Optional[str] = Field(default=None)
     BLOCKCHAIN_ENABLED: bool = Field(default=False)
     
     # Contract Addresses
-    PREDICTION_ORACLE_ADDRESS: Optional[str] = Field(default=None, env="PREDICTION_ORACLE_ADDRESS")
+    PREDICTION_ORACLE_ADDRESS: Optional[str] = Field(default=None)
     
     # Data APIs
-    COINGECKO_API_KEY: Optional[str] = Field(default=None, env="COINGECKO_API_KEY")
-    COINGECKO_BASE_URL: str = Field(
-        default="https://api.coingecko.com/api/v3",
-        env="COINGECKO_BASE_URL"
-    )
+    COINGECKO_API_KEY: Optional[str] = Field(default=None)
+    COINGECKO_BASE_URL: str = Field(default="https://api.coingecko.com/api/v3")
+    
+    # Data Aggregation Settings (V2)
+    MIN_SOURCES: int = Field(default=2)
+    MAX_DEVIATION_PERCENT: float = Field(default=5.0)
+    CACHE_TTL_SECONDS: int = Field(default=30)
+    REQUEST_TIMEOUT_SECONDS: int = Field(default=5)
     
     # IPFS
-    PINATA_JWT: Optional[str] = Field(default=None, env="PINATA_JWT")
+    PINATA_JWT: Optional[str] = Field(default=None)
     IPFS_ENABLED: bool = Field(default=False)
     
     # ML Settings
-    MODEL_UPDATE_INTERVAL: int = Field(default=3600, env="MODEL_UPDATE_INTERVAL")
-    PREDICTION_CONFIDENCE_THRESHOLD: float = Field(default=0.7, env="PREDICTION_CONFIDENCE_THRESHOLD")
-    SUPPORTED_ASSETS: str = Field(default="BTC,ETH,SOL", env="SUPPORTED_ASSETS")
+    MODEL_UPDATE_INTERVAL: int = Field(default=3600)
+    PREDICTION_CONFIDENCE_THRESHOLD: float = Field(default=0.7)
+    SUPPORTED_ASSETS: str = Field(default="BTC,ETH,SOL")
     
     # API Settings
-    API_HOST: str = Field(default="0.0.0.0", env="API_HOST")
-    API_PORT: int = Field(default=8000, env="API_PORT")
+    API_HOST: str = Field(default="0.0.0.0")
+    API_PORT: int = Field(default=8000)
+    API_WORKERS: int = Field(default=4)
     
     # Monitoring
-    SENTRY_DSN: Optional[str] = Field(default=None, env="SENTRY_DSN")
-    
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = True
+    SENTRY_DSN: Optional[str] = Field(default=None)
+    ENABLE_METRICS: bool = Field(default=True)
+    PROMETHEUS_PORT: int = Field(default=9090)
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
