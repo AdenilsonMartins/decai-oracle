@@ -3,6 +3,11 @@
 ## [2.0.0-phase1] - 2026-02-10
 
 ### Added
+- `contracts/src/PredictionOracleV2.sol`: Hardened contract with AccessControl, Custom Errors, and Gas optimization.
+- `src/api/main.py`: New FastAPI-based production API.
+- `src/api/middleware.py`: Resilience layer with Rate Limiting (SlowAPI), Caching (Redis), and Circuit Breakers.
+- `src/monitoring/metrics.py`: Observability layer with Prometheus metrics (latency, errors, balance).
+- `tests/test_ml_engine.py`: Comprehensive unit testing suite for ML components.
 - `src/data/data_aggregator.py`: Multi-source data aggregator with fallback and consensus logic.
 - `src/resilient_oracle.py`: Integration example for the resilient oracle system.
 - `tests/test_e2e.py`: End-to-end test suite for blockchain and ML integration.
