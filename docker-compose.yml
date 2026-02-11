@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: decai_oracle_api
+    command: uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - REDIS_URL=redis://redis:6379/0
+      # Pass other env vars here or use .env file
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    networks:
+      - decai_network
+    restart: always
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: decai_oracle_dashboard
+    command: streamlit run dashboard/app.py --server.port 8501 --server.address 0.0.0.0
+    volumes:
+      - .:/app
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    depends_on:
+      - api
+    networks:
+      - decai_network
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    container_name: decai_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - decai_network
+    restart: always
+
+networks:
+  decai_network:
+    driver: bridge
+
+volumes:
+  redis_data:

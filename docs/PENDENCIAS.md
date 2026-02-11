@@ -11,7 +11,7 @@
 Fase 1: Preparação      [██████████] 100% ✅
 Fase 2: Implementação   [██████████] 100% ✅
 Fase 3: Validação       [██████████] 100% ✅
-Fase 4: Deploy          [█████░░░░░]  50% 🔄  (Smart Contract OK, falta Cloud)
+Fase 4: Deploy          [███████░░░]  70% 🔄  (Docker Ready, falta Cloud Push)
 Fase 5: Hardening V2.1  [░░░░░░░░░░]   0% ⏳
 ```
 
@@ -39,13 +39,13 @@ Fase 5: Hardening V2.1  [░░░░░░░░░░]   0% ⏳
 
 ### 2. Deploy do Backend em Cloud
 
-**Status**: ❌ Não iniciado. Apenas rodando localmente.
+**Status**: 🔄 Em Progresso (Dockerização completa ✅)
 
 **Tarefas:**
-- [ ] Escolher plataforma (Railway, Render, AWS, DigitalOcean...)
-- [ ] Criar `Dockerfile` para a API FastAPI
-- [ ] Criar `docker-compose.yml` (API + Redis)
-- [ ] Configurar variáveis de ambiente em produção
+- [x] Escolher plataforma (Railway, Render, AWS, DigitalOcean...) -> *Recomendado Railway*
+- [x] Criar `Dockerfile` para a API FastAPI
+- [x] Criar `docker-compose.yml` (API + Redis)
+- [x] Configurar variáveis de ambiente em produção (`.env.production.example`)
 - [ ] Deploy e verificar endpoints remotamente
 - [ ] Configurar domínio customizado (opcional)
 - [ ] Configurar HTTPS/TLS
@@ -83,11 +83,12 @@ Fase 5: Hardening V2.1  [░░░░░░░░░░]   0% ⏳
 
 ### 5. Auditoria Automatizada do Contrato
 
-**Status**: ⏳ Apenas auditoria manual foi realizada.
+**Status**: 🔄 Em Progresso (Script de automação criado)
 
 **Tarefas:**
-- [ ] Instalar Slither: `pip install slither-analyzer`
-- [ ] Executar: `slither contracts/src/PredictionOracle.sol`
+- [x] Criar script de auditoria: `scripts/security_audit.py`
+- [ ] Instalar Slither: `pip install slither-analyzer` (Requer solc)
+- [ ] Executar: `python scripts/security_audit.py`
 - [ ] Corrigir findings de severidade **High** e **Medium**
 - [ ] Documentar resultados em `docs/security/SLITHER_REPORT.md`
 

@@ -1,3 +1,4 @@
+
 # ===================================
 # DecAI Oracle - .gitignore
 # ===================================
@@ -102,7 +103,7 @@ site/
 # Project-specific exclusions
 # ===================================
 
-# AI Agent tools (not part of DecAI Oracle)
+# AI Agent tools (keep local only)
 
 
 # Internal planning & organization docs

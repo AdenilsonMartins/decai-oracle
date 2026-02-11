@@ -106,3 +106,67 @@ streamlit run dashboard/app.py
 - **Insufficient Funds**: Ensure your wallet has enough Sepolia ETH (>0.01 ETH).
 - **RPC Error**: Check if your Infura/Alchemy API key is correct.
 - **Nonce Error**: Reset your MetaMask transaction history or check pending transactions.
+
+---
+
+## 7️⃣ Docker Deployment (Production)
+
+For production environments, use Docker.
+
+### 7.1 Build and Run with Docker Compose
+
+1. ensure you have `docker` and `docker-compose` installed.
+2. Create a `.env` file with production values (use `.env.production.example` as a template).
+3. Run:
+
+```bash
+docker-compose up -d --build
+```
+
+Access:
+- **API**: `http://localhost:8000`
+- **Dashboard**: `http://localhost:8501`
+
+---
+
+## 8️⃣ Cloud Deployment (Railway / Render)
+
+### Option A: Railway (Recommended)
+
+1. Fork this repository to your GitHub.
+2. Login to [Railway.app](https://railway.app/).
+3. Create a **New Project** → **Deploy from GitHub repo**.
+4. Select `decai-oracle`.
+5. Add Variables in Railway Dashboard:
+   - Copy content from `.env.production.example`.
+   - Set `PORT` to `8000`.
+6. Add a **Redis** service in Railway and link it (`REDIS_URL` will be auto-injected).
+7. Railway will auto-detect the `Dockerfile` and build.
+
+### Option B: Render
+
+1. Create a **Web Service** on [Render.com](https://render.com/).
+2. Select your repo.
+3. Runtime: **Docker**.
+4. Environment Variables: Add all keys from `.env.production.example`.
+5. Deploy.
+
+---
+
+## 9️⃣ Streamlit Cloud (Dashboard Only)
+
+If you want to host only the dashboard:
+
+1. Sign up for [Streamlit Cloud](https://share.streamlit.io/).
+2. Connect your GitHub.
+3. Deploy App:
+   - Repo: `decai-oracle`
+   - Branch: `main`
+   - Main file: `dashboard/app.py`
+4. **Advanced Settings** → **Secrets**:
+   - Paste the content of your `.env` file here in TOML format:
+     ```toml
+     PREDICTION_ORACLE_ADDRESS = "0x..."
+     SEPOLIA_RPC_URL = "https://..."
+     ```
+

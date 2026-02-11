@@ -1,5 +1,21 @@
 # CHANGELOG V2 - DecAI Oracle
 
+## [2.1.0-phase4] - 2026-02-11 (Cloud & Security Prep)
+
+### Added
+- **Dockerization**: `Dockerfile` and `docker-compose.yml` for production deployment.
+- **Security**: `scripts/security_audit.py` for automated Slither/Mythril audits.
+- **Documentation**: New sections in `docs/DEPLOY_GUIDE.md` for Railway/Render/Docker.
+- **Verification**: `docs/DEPLOYMENT_LOG.md` updated with V2 system verification results.
+
+### Changed
+- `docs/STATUS_COMPLETO.md`: Updated to reflect Docker/Cloud readiness.
+- `docs/PENDENCIAS.md`: Updated Phase 4 status to 70%.
+
+### Infrastructure
+- Ready for Cloud Deployment (Railway/Render).
+- Automated Security Audit groundwork laid.
+
 ## [2.0.0-phase1] - 2026-02-10
 
 ### Added
