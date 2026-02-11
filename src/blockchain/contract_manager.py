@@ -4,8 +4,8 @@ Versão 2.0 - Integração Real com Blockchain
 
 Deploy Info:
 - Network: Sepolia Testnet
-- Contract: 0x5A1788fBDBB9868C2D89A01ee5C6B692cb57fAFA
-- Deployed: 09/02/2026
+- Contract: 0x0E8B23cb4Dcdd2AA3bc7a5db0070a2E9CB1c4252
+- Deployed: 11/02/2026
 """
 
 import os

@@ -103,7 +103,7 @@ site/
 # ===================================
 
 # AI Agent tools (not part of DecAI Oracle)
-.agent/
+
 
 # Internal planning & organization docs
 docs/planning/

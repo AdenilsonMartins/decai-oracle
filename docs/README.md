@@ -98,7 +98,7 @@ npx hardhat run scripts/deploy.js --network sepolia
 ## 📊 Status Atual
 
 ### ✅ Completado
-- Contrato deployado em Sepolia: `0x5A1788fBDBB9868C2D89A01ee5C6B692cb57fAFA`
+- Contrato deployado em Sepolia: `0x0E8B23cb4Dcdd2AA3bc7a5db0070a2E9CB1c4252`
 - Infraestrutura base funcionando
 - Testes E2E passando
 - Documentação V2 completa
@@ -118,7 +118,7 @@ npx hardhat run scripts/deploy.js --network sepolia
 ## 🔗 Links Úteis
 
 ### Blockchain
-- **Contrato (Sepolia):** [Etherscan](https://sepolia.etherscan.io/address/0x5A1788fBDBB9868C2D89A01ee5C6B692cb57fAFA)
+- **Contrato (Sepolia):** [Etherscan](https://sepolia.etherscan.io/address/0x0E8B23cb4Dcdd2AA3bc7a5db0070a2E9CB1c4252)
 - **Wallet:** `0xcbc53e6265834A24090466Ac8442aA087b7de66f`
 
 ### Repositório
