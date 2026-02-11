@@ -1,0 +1,266 @@
+# 🔮 DecAI Oracle - Decentralized AI-Powered Oracle
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![Solidity 0.8+](https://img.shields.io/badge/solidity-0.8+-363636.svg)](https://soliditylang.org/)
+
+> **Open-source toolkit for AI-powered blockchain oracles with machine learning predictions, on-chain verification, and decentralized governance.**
+
+---
+
+## 🌟 Vision
+
+DecAI Oracle bridges the gap between artificial intelligence and blockchain technology, creating a **decentralized prediction oracle** that:
+
+- 🧠 Uses **Machine Learning** to predict crypto prices, gas fees, and market trends
+- ⛓️ Stores predictions **on-chain** with cryptographic verification
+- 🔒 Implements **Zero-Knowledge Proofs** for model verification
+- 🌐 Supports **multi-chain** deployments (Ethereum, Solana, NEAR)
+- 🤝 Enables **federated learning** for decentralized model training
+- 💰 Provides **tokenomics** and DAO governance for sustainability
+
+---
+
+## 🎯 Key Features
+
+### Core Functionality
+- ✅ **Real-time Data Collection**: CoinGecko API integration for crypto market data
+- ✅ **ML Predictions**: Linear regression → LSTM neural networks
+- ✅ **On-chain Storage**: Ethereum smart contracts with event logging
+- ✅ **Interactive Dashboard**: Streamlit web app with real-time predictions
+- ✅ **Gas Fees Optimizer**: ML-powered transaction cost optimization
+- ✅ **Accuracy Tracking**: On-chain verification with public leaderboard
+- ✅ **Social Automation**: Twitter bot for daily predictions
+
+### Advanced Features (Roadmap)
+- 🔐 **ZK-Proofs**: Verify ML model integrity without revealing training data
+- 🌍 **Cross-Chain**: Deploy on Ethereum, Polygon, Solana, NEAR
+- 🤖 **Federated Learning**: Decentralized model training with community contributions
+- 🛡️ **Smart Contract Auditing**: AI-powered vulnerability detection
+- 🏛️ **DAO Governance**: Token-based voting for protocol upgrades
+- 📱 **Telegram Bot**: Interactive predictions via messaging
+- 🔌 **REST API**: Public API for DApp integrations
+
+---
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    DecAI Oracle System                       │
+├─────────────────────────────────────────────────────────────┤
+│                                                               │
+│  ┌──────────────┐      ┌──────────────┐      ┌────────────┐ │
+│  │ Data Sources │─────▶│  ML Engine   │─────▶│ Blockchain │ │
+│  │              │      │              │      │            │ │
+│  │ • CoinGecko  │      │ • Training   │      │ • Ethereum │ │
+│  │ • APIs       │      │ • Prediction │      │ • Polygon  │ │
+│  │ • On-chain   │      │ • Validation │      │ • Solana   │ │
+│  └──────────────┘      └──────────────┘      └────────────┘ │
+│         │                      │                     │       │
+│         └──────────────────────┼─────────────────────┘       │
+│                                │                             │
+│                        ┌───────▼────────┐                    │
+│                        │  IPFS Storage  │                    │
+│                        │  (Pinata/W3S)  │                    │
+│                        └────────────────┘                    │
+│                                                               │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │         Smart Contract Layer (Solidity)              │   │
+│  │  • PredictionOracle.sol                              │   │
+│  │  • Governance DAO                                    │   │
+│  │  • ERC-20 Token (Incentives)                         │   │
+│  └──────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Python 3.12+
+- Node.js 18+ (for smart contract deployment)
+- Git
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/decai-oracle.git
+cd decai-oracle
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Install Node.js dependencies (for smart contracts)
+cd contracts
+npm install
+cd ..
+
+# Setup environment variables
+cp .env.example .env
+# Edit .env with your API keys (see SETUP_GUIDE.md)
+```
+
+### Run Features
+
+```bash
+# 1. Run basic prediction
+python src/main.py
+
+# 2. Launch interactive dashboard
+streamlit run dashboard/app.py
+
+# 3. Try gas fees predictor
+python src/ml/gas_fees_predictor.py
+
+# 4. Check accuracy tracking
+python src/ml/accuracy_tracker.py
+
+# 5. Simulate Twitter bot
+python src/social/twitter_bot.py
+
+# 6. Deploy smart contract to Sepolia testnet
+cd contracts
+npx hardhat run scripts/deploy.js --network sepolia
+```
+
+📖 **See [QUICKSTART.md](./QUICKSTART.md) for detailed 5-minute setup guide**
+
+---
+
+## 📚 Documentation
+
+### Getting Started
+- 📋 [**Executive Summary**](./docs/EXECUTIVE_SUMMARY.md) - ⭐ START HERE - Complete overview
+- 🚀 [**Deployment Plan**](./docs/DEPLOYMENT_PLAN.md) - Step-by-step deployment guide
+- 🔐 [**Environment Setup**](./docs/ENV_SETUP_GUIDE.md) - Configure .env correctly
+- 🖥️ [**Streamlit Deployment**](./docs/STREAMLIT_DEPLOYMENT.md) - Publish dashboard online
+- 📱 [**Social Media Templates**](./docs/SOCIAL_MEDIA_TEMPLATES.md) - Launch content ready to use
+
+### Project Documentation
+- 📖 [**Setup Guide**](./docs/SETUP_GUIDE.md) - Complete infrastructure setup
+- 🗺️ [**Roadmap**](./docs/ROADMAP.md) - Development phases and timeline
+- 📚 [**Features**](./docs/FEATURES.md) - Complete features documentation
+- 💼 [**Commercial Strategy**](./docs/COMMERCIAL_STRATEGY.md) - Business model and monetization
+- 🔧 [**API Documentation**](./docs/API.md) - REST API reference
+- 🤝 [**Contributing**](./CONTRIBUTING.md) - How to contribute
+- 📜 [**Architecture**](./docs/ARCHITECTURE.md) - Technical deep dive
+
+---
+
+## 💰 Commercial Model
+
+DecAI Oracle operates on a **hybrid open-source model**:
+
+### Free Tier (Open Source)
+- ✅ Core ML engine and prediction algorithms
+- ✅ Basic smart contracts
+- ✅ Community support via GitHub
+
+### Premium Tier (SaaS)
+- 🚀 High-frequency API access (>1000 req/day)
+- 🚀 Multi-chain deployment support
+- 🚀 Priority support and custom integrations
+- 🚀 Advanced analytics dashboard
+
+### Token Economy
+- 🪙 **$DECAI Token**: Governance and staking
+- 🪙 **Staking Rewards**: Earn by contributing accurate predictions
+- 🪙 **DAO Voting**: Community-driven protocol upgrades
+
+See [COMMERCIAL_STRATEGY.md](./docs/COMMERCIAL_STRATEGY.md) for details.
+
+---
+
+## 🛣️ Roadmap
+
+### Phase 1: MVP (Weeks 1-4) ✅ COMPLETED
+- [x] Python ML engine with scikit-learn
+- [x] Ethereum smart contract deployment
+- [x] Basic API endpoints
+- [x] Documentation
+- [x] Web dashboard (Streamlit)
+- [x] Blockchain Integration (Hardhat/Web3.py)
+
+### Phase 2: Advanced Features (Months 2-3) 🔄
+- [ ] IPFS integration for data storage
+- [ ] Multi-chain support (Polygon, Solana)
+- [ ] Advanced ML models (LSTM, Transformers)
+- [ ] REST API with FastAPI
+
+### Phase 3: Decentralization (Months 4-6) 📅
+- [ ] Zero-Knowledge Proofs for model verification
+- [ ] Federated Learning implementation
+- [ ] DAO governance launch
+- [ ] Token generation event (TGE)
+
+### Phase 4: Scale (Months 7-12) 🚀
+- [ ] Mainnet deployment
+- [ ] Strategic partnerships (Chainlink, Aave)
+- [ ] Security audits (CertiK, Trail of Bits)
+- [ ] 1000+ active users
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+
+### Ways to Contribute
+- 🐛 Report bugs and issues
+- 💡 Propose new features
+- 🔧 Submit pull requests
+- 📖 Improve documentation
+- 🌍 Translate to other languages
+
+---
+
+## 📊 Market Opportunity
+
+- **AI + Blockchain Market**: $843M (2026) → $90B projected
+- **CAGR**: 27.1% through 2034
+- **Use Cases**: DeFi, RWAs, Prediction Markets, Supply Chain
+- **Competitors**: Chainlink, ORA, Bittensor
+
+**Differentiation**: Open-source, ML-native, developer-friendly Python toolkit.
+
+---
+
+## 🔒 Security
+
+- All smart contracts will undergo professional audits before mainnet
+- Bug bounty program (details TBA)
+- Report vulnerabilities: security@decai-oracle.io
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see [LICENSE](./LICENSE) for details.
+
+---
+
+## 🌐 Links
+
+- **Website**: https://decai-oracle.io (TBA)
+- **Documentation**: https://docs.decai-oracle.io (TBA)
+- **Twitter**: [@DecAIOracle](https://twitter.com/DecAIOracle)
+- **Discord**: [Join Community](https://discord.gg/decai-oracle)
+- **GitHub**: [DecAI Oracle](https://github.com/yourusername/decai-oracle)
+
+---
+
+## 🙏 Acknowledgments
+
+Built with ❤️ by the DecAI community.
+
+Inspired by:
+- [Chainlink](https://chain.link/) - Decentralized oracle networks
+- [ORA](https://www.ora.io/) - On-chain ML verification
+- [Bittensor](https://bittensor.com/) - Decentralized AI networks
+
+---
+
+**⭐ Star this repo if you find it useful!**
