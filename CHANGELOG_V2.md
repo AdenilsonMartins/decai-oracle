@@ -5,6 +5,7 @@
 ### Added
 - **Dockerization**: `Dockerfile` and `docker-compose.yml` for production deployment.
 - **Security**: `scripts/security_audit.py` for automated Slither/Mythril audits.
+- **Testing**: `scripts/coverage_report.py` for automated pytest code coverage analysis.
 - **Documentation**: New sections in `docs/DEPLOY_GUIDE.md` for Railway/Render/Docker.
 - **Verification**: `docs/DEPLOYMENT_LOG.md` updated with V2 system verification results.
 

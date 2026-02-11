@@ -96,11 +96,12 @@ Fase 5: Hardening V2.1  [░░░░░░░░░░]   0% ⏳
 
 ### 6. Cobertura de Testes
 
-**Status**: ⚠️ Testes passam, mas cobertura não é medida formalmente.
+**Status**: 🔄 Em Progresso (44% Total)
 
 **Tarefas:**
-- [ ] Executar: `pytest --cov=src tests/ --cov-report=html`
-- [ ] Meta: > 80% de cobertura
+- [x] Executar: `pytest --cov=src tests/ --cov-report=html` (Relatório gerado)
+- [ ] Meta: > 80% de cobertura (Atual: 44%)
+- [ ] **Prioridade**: Adicionar testes para `src/resilient_oracle.py` (0% atual)
 - [ ] Adicionar testes para `src/social/twitter_bot.py`
 - [ ] Adicionar testes para `src/api/middleware.py`
 - [ ] Adicionar testes para `src/monitoring/metrics.py`
