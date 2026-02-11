@@ -1,61 +1,13 @@
-# 🔮 DecAI Oracle V2 - Resilient & Verifiable
+# 🔮 DecAI Oracle
 
-DecAI Oracle is a decentralized, AI-powered price prediction system designed for maximum resilience and high-integrity data delivery.
+> Decentralized AI-Powered Prediction Oracle on Ethereum
 
-## 🛡️ Resilient Architecture (V2)
-The Version 2.0 release introduces a **Resilience Layer** that eliminates Single Points of Failure (SPOF):
-- **Multi-Source Aggregation**: Real-time consensus between Binance, CoinGecko, and CoinCap.
-- **Smart Outlier Detection**: Automatic removal of anomalous data (furthest-from-median) to prevent market manipulation.
-- **Circuit Breaker Pattern**: Isolation of degraded data sources to preserve system performance.
-- **On-Chain Hardening**: Optimized `PredictionOracleV2` contract with Access Control and Gas optimization.
+[![Solidity](https://img.shields.io/badge/Solidity-0.8.24-blue)](https://soliditylang.org/)
+[![Python](https://img.shields.io/badge/Python-3.12+-green)](https://python.org/)
+[![Sepolia](https://img.shields.io/badge/Network-Sepolia-yellow)](https://sepolia.etherscan.io/)
+[![License](https://img.shields.io/badge/License-MIT-purple)](./LICENSE)
 
-## 🚀 Key Features
-- **FastAPI Production Engine**: Asynchronous API with rate limiting and Redis caching.
-- **Enterprise Monitoring**: Prometheus metrics for real-time observability.
-- **Premium Dashboard**: Streamlit-based interface for visualizing market consensus and AI predictions.
-- **Blockchain Integrity**: Automated storage of predictions on the Sepolia Testnet.
-
-## 🛠️ Quick Start
-
-### 1. Setup Environment
-```bash
-python scripts/setup.py
-```
-Ensure your `.env` contains `INFURA_API_KEY`, `PRIVATE_KEY`, and `PREDICTION_ORACLE_ADDRESS`.
-
-### 2. Run the Dashboard
-```bash
-$env:PYTHONPATH="."
-streamlit run src/dashboard/app.py
-```
-
-### 3. Start Production API
-```bash
-$env:PYTHONPATH="."
-python src/api/main.py
-```
-
-## 📊 Dashboard Preview
-The dashboard provides a real-time view of:
-- **Price Consensus**: Aggregated price from multiple top-tier exchanges.
-- **AI Prediction Horizon**: 24h price forecasts with confidence intervals.
-- **Resilience Health**: Real-time status of all data connectors.
-- **Blockchain Logs**: Verification of on-chain transaction integrity.
-
-## 📄 Documentation
-- [Planning V2](./docs/planning/v2/)
-- [Implementation Status](./docs/planning/v2/IMPLEMENTATION_STATUS.md)
-- [Resilient Architecture](./docs/planning/v2/RESILIENT_ARCHITECTURE.md)
-- [Changelog](./CHANGELOG_V2.md)
-
----
-**Version:** 2.0.0 (Production-Ready)  
-**Status:** Phase 2 Complete (Resilience Integrated)
-- 🏛️ **DAO Governance**: Token-based voting for protocol upgrades
-- 📱 **Telegram Bot**: Interactive predictions via messaging
-- 🔌 **REST API**: Public API for DApp integrations
-
----
+DecAI Oracle is a decentralized, AI-powered price prediction system with on-chain verification.
 
 ## 🏗️ Architecture
 
@@ -63,205 +15,131 @@ The dashboard provides a real-time view of:
 ┌─────────────────────────────────────────────────────────────┐
 │                    DecAI Oracle System                       │
 ├─────────────────────────────────────────────────────────────┤
-│                                                               │
-│  ┌──────────────┐      ┌──────────────┐      ┌────────────┐ │
-│  │ Data Sources │─────▶│  ML Engine   │─────▶│ Blockchain │ │
-│  │              │      │              │      │            │ │
-│  │ • CoinGecko  │      │ • Training   │      │ • Ethereum │ │
-│  │ • APIs       │      │ • Prediction │      │ • Polygon  │ │
-│  │ • On-chain   │      │ • Validation │      │ • Solana   │ │
-│  └──────────────┘      └──────────────┘      └────────────┘ │
-│         │                      │                     │       │
-│         └──────────────────────┼─────────────────────┘       │
-│                                │                             │
-│                        ┌───────▼────────┐                    │
-│                        │  IPFS Storage  │                    │
-│                        │  (Pinata/W3S)  │                    │
-│                        └────────────────┘                    │
-│                                                               │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │         Smart Contract Layer (Solidity)              │   │
-│  │  • PredictionOracle.sol                              │   │
-│  │  • Governance DAO                                    │   │
-│  │  • ERC-20 Token (Incentives)                         │   │
-│  └──────────────────────────────────────────────────────┘   │
+│                                                             │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐  │
+│  │ Data Sources  │───▶│  ML Engine   │───▶│  Blockchain  │  │
+│  │              │    │              │    │              │  │
+│  │ • Binance    │    │ • Training   │    │ • Ethereum   │  │
+│  │ • CoinGecko  │    │ • Prediction │    │ • Sepolia    │  │
+│  │ • CoinCap    │    │ • Validation │    │ • Verified   │  │
+│  └──────────────┘    └──────────────┘    └──────────────┘  │
+│         │                    │                   │          │
+│         └────────────────────┼───────────────────┘          │
+│                              │                              │
+│                     ┌────────▼────────┐                     │
+│                     │   FastAPI + UI  │                     │
+│                     │ Dashboard/API   │                     │
+│                     └─────────────────┘                     │
 └─────────────────────────────────────────────────────────────┘
 ```
 
----
+## 🛡️ Features
+
+- **Multi-Source Aggregation**: Real-time price consensus from Binance, CoinGecko, and CoinCap
+- **ML Prediction Engine**: Linear regression with confidence scoring
+- **On-Chain Storage**: Predictions stored and verifiable on Ethereum (Sepolia)
+- **Hardened Smart Contract**: AccessControl, Pausable, ReentrancyGuard, Custom Errors
+- **FastAPI Backend**: Production-ready API with rate limiting and monitoring
+- **Streamlit Dashboard**: Real-time visualization of predictions and blockchain data
+- **Prometheus Metrics**: Built-in observability
+
+## 📜 Smart Contract
+
+| Property | Value |
+|----------|-------|
+| **Network** | Sepolia Testnet |
+| **Address** | `0x0E8B23cb4Dcdd2AA3bc7a5db0070a2E9CB1c4252` |
+| **Etherscan** | [Verified ✅](https://sepolia.etherscan.io/address/0x0E8B23cb4Dcdd2AA3bc7a5db0070a2E9CB1c4252#code) |
+| **Gas (store)** | ~109-126k |
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 - Python 3.12+
-- Node.js 18+ (for smart contract deployment)
-- Git
+- Node.js 18+
 
 ### Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/decai-oracle.git
+# Clone
+git clone https://github.com/AdenilsonMartins/decai-oracle.git
 cd decai-oracle
 
-# Install Python dependencies
+# Python dependencies
 pip install -r requirements.txt
 
-# Install Node.js dependencies (for smart contracts)
-cd contracts
-npm install
-cd ..
+# Smart contract dependencies
+cd contracts && npm install && cd ..
 
-# Setup environment variables
+# Environment
 cp .env.example .env
-# Edit .env with your API keys (see SETUP_GUIDE.md)
+# Edit .env with your API keys
 ```
 
-### Run Features
+### Run
 
 ```bash
-# 1. Run basic prediction
-python src/main.py
+# API Server
+python -m uvicorn src.api.main:app --host 0.0.0.0 --port 8000
 
-# 2. Launch interactive premium dashboard
-streamlit run src/dashboard/app.py
+# Dashboard (separate terminal)
+streamlit run dashboard/app.py --server.port 8501
 
-# 3. Try gas fees predictor
-python src/ml/gas_fees_predictor.py
-
-# 4. Check accuracy tracking
-python src/ml/accuracy_tracker.py
+# Run all tests
+python -m pytest tests/ -v
+cd contracts && npx hardhat test
 ```
 
-📖 **See [QUICKSTART.md](./QUICKSTART.md) for detailed 5-minute setup guide**
+## 📊 API Endpoints
 
----
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/v2/health` | System health check |
+| `POST` | `/api/v2/predict` | Generate ML prediction |
+| `GET` | `/api/v2/stats/{address}` | Predictor statistics |
+| `GET` | `/api/v2/docs` | Swagger documentation |
+| `GET` | `/metrics` | Prometheus metrics |
 
-## 📚 Documentation
+## 🧪 Tests
 
-### Getting Started
-- 🚀 [**Deployment Guide**](./docs/DEPLOY_GUIDE.md) - Step-by-step deployment guide
-- 🔐 [**Environment Setup**](./docs/ENV_SETUP_GUIDE.md) - Configure .env correctly
-- 📋 [**Implementation Status**](./docs/planning/v2/IMPLEMENTATION_STATUS.md) - Track what's done
+| Suite | Count | Engine |
+|-------|-------|--------|
+| ML Engine (pytest) | 11/11 ✅ | Python |
+| E2E Blockchain | 4/4 ✅ | Python ↔ Sepolia |
+| Smart Contract (Hardhat) | 9/9 ✅ | Solidity |
+| **Total** | **24/24** | — |
 
-### Project Documentation
-- 🗺️ [**Roadmap V2**](./docs/planning/ROADMAP_V2.md) - Development phases and timeline
-- 🏛️ [**Resilient Architecture**](./docs/planning/v2/RESILIENT_ARCHITECTURE.md) - Technical deep dive
-- 🤝 [**Contributing**](./CONTRIBUTING.md) - How to contribute
-- 🗂️ [**Archive (V1)**](./docs/archive/v1/) - Legacy documentation
+## 📁 Project Structure
 
----
-
-## 💰 Commercial Model
-
-DecAI Oracle operates on a **hybrid open-source model**:
-
-### Free Tier (Open Source)
-- ✅ Core ML engine and prediction algorithms
-- ✅ Basic smart contracts
-- ✅ Community support via GitHub
-
-### Premium Tier (SaaS)
-- 🚀 High-frequency API access (>1000 req/day)
-- 🚀 Multi-chain deployment support
-- 🚀 Priority support and custom integrations
-- 🚀 Advanced analytics dashboard
-
-### Token Economy
-- 🪙 **$DECAI Token**: Governance and staking
-- 🪙 **Staking Rewards**: Earn by contributing accurate predictions
-- 🪙 **DAO Voting**: Community-driven protocol upgrades
-
-See [COMMERCIAL_STRATEGY.md](./docs/COMMERCIAL_STRATEGY.md) for details.
-
----
-
-## 🛣️ Roadmap
-
-### Phase 1: MVP (Weeks 1-4) ✅ COMPLETED
-- [x] Python ML engine with scikit-learn
-- [x] Ethereum smart contract deployment
-- [x] Basic API endpoints
-- [x] Documentation
-- [x] Web dashboard (Streamlit)
-- [x] Blockchain Integration (Hardhat/Web3.py)
-
-### Phase 2: Advanced Features (Months 2-3) 🔄
-- [ ] IPFS integration for data storage
-- [ ] Multi-chain support (Polygon, Solana)
-- [ ] Advanced ML models (LSTM, Transformers)
-- [ ] REST API with FastAPI
-
-### Phase 3: Decentralization (Months 4-6) 📅
-- [ ] Zero-Knowledge Proofs for model verification
-- [ ] Federated Learning implementation
-- [ ] DAO governance launch
-- [ ] Token generation event (TGE)
-
-### Phase 4: Scale (Months 7-12) 🚀
-- [ ] Mainnet deployment
-- [ ] Strategic partnerships (Chainlink, Aave)
-- [ ] Security audits (CertiK, Trail of Bits)
-- [ ] 1000+ active users
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
-
-### Ways to Contribute
-- 🐛 Report bugs and issues
-- 💡 Propose new features
-- 🔧 Submit pull requests
-- 📖 Improve documentation
-- 🌍 Translate to other languages
-
----
-
-## 📊 Market Opportunity
-
-- **AI + Blockchain Market**: $843M (2026) → $90B projected
-- **CAGR**: 27.1% through 2034
-- **Use Cases**: DeFi, RWAs, Prediction Markets, Supply Chain
-- **Competitors**: Chainlink, ORA, Bittensor
-
-**Differentiation**: Open-source, ML-native, developer-friendly Python toolkit.
-
----
+```
+decai-oracle/
+├── contracts/              # Solidity smart contracts
+│   ├── src/                # Contract source files
+│   ├── test/               # Hardhat tests
+│   └── scripts/            # Deploy scripts
+├── src/                    # Python backend
+│   ├── api/                # FastAPI endpoints
+│   ├── blockchain/         # Web3 contract manager
+│   ├── data/               # Multi-source data aggregation
+│   ├── ml/                 # ML prediction engine
+│   ├── monitoring/         # Prometheus metrics
+│   └── utils/              # Config, logging
+├── dashboard/              # Streamlit dashboard
+├── tests/                  # Python test suites
+├── .env.example            # Environment template
+└── requirements.txt        # Python dependencies
+```
 
 ## 🔒 Security
 
-- All smart contracts will undergo professional audits before mainnet
-- Bug bounty program (details TBA)
-- Report vulnerabilities: security@decai-oracle.io
-
----
+- AccessControl with role-based permissions (PREDICTOR, VERIFIER, ADMIN)
+- Pausable for emergency stops
+- ReentrancyGuard on all state-changing functions
+- Custom Errors for gas-efficient reverts
 
 ## 📄 License
 
-This project is licensed under the **MIT License** - see [LICENSE](./LICENSE) for details.
-
----
-
-## 🌐 Links
-
-- **Website**: https://decai-oracle.io (TBA)
-- **Documentation**: https://docs.decai-oracle.io (TBA)
-- **Twitter**: [@DecAIOracle](https://twitter.com/DecAIOracle)
-- **Discord**: [Join Community](https://discord.gg/decai-oracle)
-- **GitHub**: [DecAI Oracle](https://github.com/yourusername/decai-oracle)
-
----
-
-## 🙏 Acknowledgments
-
-Built with ❤️ by the DecAI community.
-
-Inspired by:
-- [Chainlink](https://chain.link/) - Decentralized oracle networks
-- [ORA](https://www.ora.io/) - On-chain ML verification
-- [Bittensor](https://bittensor.com/) - Decentralized AI networks
+MIT License — see [LICENSE](./LICENSE) for details.
 
 ---
 
