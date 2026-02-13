@@ -20,9 +20,9 @@ from src.blockchain.contract_manager import ContractManager
 logger = setup_logger(__name__)
 
 app = FastAPI(
-    title="DecAI Oracle API",
-    description="Decentralized AI-Powered Oracle API with Verifiable Predictions",
-    version="2.0.0",
+    title="DecAI Oracle Network API",
+    description="DecAI Oracle Network (DON) - High-Frequency Prediction Infrastructure",
+    version="1.0.0",
     docs_url="/api/v2/docs",
     redoc_url="/api/v2/redoc"
 )
@@ -52,7 +52,7 @@ class HealthStatus(BaseModel):
 # Endpoints
 @app.get("/", include_in_schema=False)
 async def root():
-    return {"message": "Welcome to DecAI Oracle API V2", "docs": "/api/v2/docs"}
+    return {"message": "Welcome to DecAI Oracle Network API", "docs": "/api/v2/docs"}
 
 @app.get("/metrics")
 async def get_metrics():
@@ -72,7 +72,7 @@ async def health_check(request: Request):
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
         "blockchain_connected": is_connected,
-        "version": "2.0.0"
+        "version": "1.0.0"
     }
 
 @app.post("/api/v2/predict", response_model=PredictionResponse)

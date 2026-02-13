@@ -1,5 +1,5 @@
 """
-DecAI Oracle — Dashboard
+DecAI Oracle Network — Dashboard
 Real-time view of on-chain predictions, wallet status, and ML engine.
 """
 
@@ -28,7 +28,7 @@ from web3 import Web3
 # Page Config
 # ─────────────────────────────────────────────
 st.set_page_config(
-    page_title="DecAI Oracle",
+    page_title="DecAI Oracle Network",
     page_icon="🔮",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -190,7 +190,7 @@ def get_predictions(contract, count):
 # Sidebar
 # ─────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("### 🔮 DecAI Oracle")
+    st.markdown("### 🔮 DecAI Oracle Network")
     st.markdown("---")
     
     page = st.radio(
@@ -240,7 +240,7 @@ if contract:
 
 if page == "📊 Dashboard":
     # Header
-    st.markdown('<p class="hero-title">DecAI Oracle</p>', unsafe_allow_html=True)
+    st.markdown('<p class="hero-title">DecAI Oracle Network</p>', unsafe_allow_html=True)
     st.markdown(
         '<p class="hero-sub">Decentralized AI-Powered Prediction Oracle on Ethereum</p>',
         unsafe_allow_html=True

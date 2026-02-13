@@ -1,6 +1,6 @@
-# ⚡ DecAI Oracle - Quick Start Guide
+# ⚡ DecAI Oracle Network - Quick Start Guide
 
-Get up and running with DecAI Oracle in 5 minutes!
+Get up and running with **DecAI Oracle Network (DON)** in 5 minutes!
 
 ---
 
@@ -8,8 +8,8 @@ Get up and running with DecAI Oracle in 5 minutes!
 
 1.  **Clone Repo**:
     ```bash
-    git clone https://github.com/yourusername/decai-oracle.git
-    cd decai-oracle
+    git clone https://github.com/AdenilsonMartins/DecAi-Oracle-NetWork.git
+    cd DecAi-Oracle-NetWork
     ```
 
 2.  **Install Python Dependencies**:
@@ -45,12 +45,15 @@ Get up and running with DecAI Oracle in 5 minutes!
     *Copy the deployed address (e.g., `0x5FbDB...`).*
 
 3.  **Configure Environment**:
-    Create `.env` file:
+    Create `.env` file from example:
+    ```bash
+    cp .env.example .env
+    ```
+    Edit `.env` and fill the variables:
     ```ini
     SEPOLIA_RPC_URL="http://127.0.0.1:8545"
-    PRIVATE_KEY="0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80" # Default Hardhat Key
+    PRIVATE_KEY="0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80" 
     PREDICTION_ORACLE_ADDRESS="PASTE_YOUR_ADDRESS_HERE"
-    BLOCKCHAIN_ENABLED=true
     ```
 
 ---
@@ -66,23 +69,23 @@ streamlit run dashboard/app.py
 *Open http://localhost:8501 in your browser.*
 
 ### 🤖 Automation (Backend)
-Run the core prediction engine or Twitter bot.
+Run the core prediction engine or API.
 
 ```bash
-# Run single prediction flow
-python src/main.py
+# Start FastAPI Server
+python -m uvicorn src.api.main:app
 
-# Run Twitter bot (simulation)
-python src/social/twitter_bot.py
+# Run single prediction flow (Resilient Cycle)
+python src/main.py
 ```
 
 ---
 
-## 4️⃣ Production Deployment (Sepolia)
+## 4️⃣ Production Deployment
 
-Ready for public testnet? See [DEPLOY_GUIDE.md](./docs/DEPLOY_GUIDE.md).
+Ready for public testnet or Railway? See [DEPLOY_GUIDE.md](./docs/DEPLOY_GUIDE.md).
 
 ---
 
 **Need Help?**
-Check [docs/TROUBLESHOOTING.md](./docs/TROUBLESHOOTING.md) or join our [Discord](https://discord.gg/decai-oracle).
+Check our documentation or [GitHub Issues](https://github.com/AdenilsonMartins/DecAi-Oracle-NetWork/issues).

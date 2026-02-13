@@ -1,14 +1,14 @@
-# 📊 DecAI Oracle — Status Completo do Projeto
+# 📊 DecAI Oracle Network — Status Completo do Projeto
 
-> **Última Atualização**: 2026-02-11 14:36  
-> **Versão**: 2.0 (V2 Core Concluído)  
+> **Última Atualização**: 2026-02-13  
+> **Versão**: 2.1 (Security Audit & Production Ready)  
 > **Rede**: Sepolia Testnet  
 
 ---
 
 ## 🏆 Resumo Executivo
 
-O **DecAI Oracle** é um sistema descentralizado de previsão de preços baseado em IA com verificação on-chain. A **implementação V2 Core está 80% concluída** — restando apenas a fase de Deploy em produção/cloud e itens de hardening (V2.1).
+O **DecAI Oracle Network** é um sistema descentralizado de previsão de preços baseado em IA com verificação on-chain. A **implementação V2 está 100% concluída** no backend e contrato, com auditoria de segurança aprovada e deploy em produção realizado no Railway.
 
 ---
 
@@ -161,14 +161,26 @@ O **DecAI Oracle** é um sistema descentralizado de previsão de preços baseado
 
 ---
 
-### 6. Infraestrutura e Cloud — ✅ Ready
-
+### 6. Infraestrutura e Cloud — ✅ Operacional (API Ativa)
 | Item | Arquivo | Status |
 |------|---------|--------|
-| **Docker** | `Dockerfile`, `docker-compose.yml` | ✅ Configurado |
+| **Docker** | `Dockerfile`, `docker-compose.yml` | ✅ Multistage Build otimizado |
 | **Prod Env** | `.env.production.example` | ✅ Template criado |
-| **Sec. Audit** | `scripts/security_audit.py` | ⚠️ Script pronto (execução pendente) |
-| **Resilient Tests** | `tests/test_resilient_oracle.py` | ✅ Coverage 65% |
+| **Deploy API** | Railway (Cloud) | ✅ **Active** (Ver URLs abaixo) |
+| **Dashboard** | Streamlit Cloud | ⚠️ Pendente deploy |
+| **Sec. Audit** | `docs/security/AUDIT_REPORT_V2.md` | ✅ **Concluído** (0 High/Med) |
+| **Resilient Tests**| `tests/test_resilient_oracle.py` | ✅ Coverage 65% |
+| **Documentação** | `README.md`, `QUICKSTART.md` | ✅ Completo |
+
+**URLs de Produção:**
+- **API (Swagger)**: `https://decai-oracle-production.up.railway.app/api/v2/docs`
+- **Dashboard**: *(Em breve)*
+
+---
+
+### 7. Documentação e Qualidade
+| Item | Arquivo | Status |
+|------|---------|--------|
 | **README** | `README.md` | ✅ Completo e profissional |
 | **Quick Start** | `QUICKSTART.md` | ✅ |
 | **Contributing** | `CONTRIBUTING.md` | ✅ |

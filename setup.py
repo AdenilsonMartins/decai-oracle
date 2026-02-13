@@ -5,9 +5,9 @@ Setup configuration for DecAI Oracle
 from setuptools import setup, find_packages
 
 setup(
-    name="decai-oracle",
-    version="0.1.0",
-    description="Decentralized AI Oracle System",
+    name="decai-oracle-network",
+    version="1.0.0",
+    description="DecAI Oracle Network - Decentralized AI Prediction Infrastructure",
     packages=find_packages(),
     python_requires=">=3.8",
     install_requires=[

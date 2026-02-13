@@ -17,6 +17,10 @@ class Settings(BaseSettings):
         extra="ignore"          # Allow extra fields in .env without failing
     )
     
+    # Application Info
+    APP_NAME: str = Field(default="DecAI Oracle Network")
+    VERSION: str = Field(default="1.0.0")
+    
     # Environment
     ENVIRONMENT: str = Field(default="development")
     LOG_LEVEL: str = Field(default="INFO")

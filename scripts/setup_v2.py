@@ -1,13 +1,7 @@
 #!/usr/bin/env python3
 """
-DecAI Oracle - Setup & Configuration Script
-Versão 1.0
-
-Este script automatiza a configuração inicial do projeto:
-- Verifica dependências
-- Valida .env
-- Testa conexão blockchain
-- Prepara ambiente
+DecAI Oracle Network - Setup & Configuration Script
+Versão 1.1
 """
 
 import os
@@ -21,7 +15,6 @@ class SetupManager:
     """Gerenciador de setup do projeto"""
     
     def __init__(self):
-        # Corrigir: scripts está dentro do projeto, então parent.parent
         self.project_root = Path(__file__).parent.parent
         self.errors = []
         self.warnings = []
@@ -29,9 +22,9 @@ class SetupManager:
     def print_header(self):
         """Imprime cabeçalho"""
         print("\n" + "="*60)
-        print("🔷 DECAI ORACLE - SETUP & CONFIGURATION")
+        print("🔷 DECAI ORACLE NETWORK - SETUP & CONFIGURATION")
         print("="*60 + "\n")
-    
+
     def check_python_version(self) -> bool:
         """Verifica versão do Python"""
         print("🐍 Verificando versão do Python...")
@@ -130,8 +123,7 @@ class SetupManager:
         required_vars = [
             'PRIVATE_KEY',
             'SEPOLIA_RPC_URL',
-            'PREDICTION_ORACLE_ADDRESS',
-            'INFURA_API_KEY'
+            'PREDICTION_ORACLE_ADDRESS'
         ]
         
         from dotenv import dotenv_values
@@ -202,8 +194,6 @@ class SetupManager:
         
         directories = [
             'data',
-            'data/models',
-            'data/predictions',
             'logs',
             'tests',
             'artifacts'
@@ -235,9 +225,8 @@ class SetupManager:
         if not self.errors and not self.warnings:
             print("\n✅ SETUP COMPLETO SEM PROBLEMAS!")
             print("\n🚀 Próximos passos:")
-            print("   1. Execute: python test_e2e.py")
-            print("   2. Verifique os resultados no Etherscan")
-            print("   3. Comece a desenvolver seus modelos ML!")
+            print("   1. Execute: python src/main.py")
+            print("   2. Verifique o dashboard: streamlit run dashboard/app.py")
         elif not self.errors:
             print("\n✅ SETUP COMPLETO COM AVISOS")
             print("   Sistema funcional, mas revise os avisos acima")

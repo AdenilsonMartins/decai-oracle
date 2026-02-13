@@ -1,7 +1,7 @@
-# ⏳ DecAI Oracle — Pendências e Próximos Passos
+# ⏳ DecAI Oracle Network — Pendências e Próximos Passos
 
-> **Última Atualização**: 2026-02-11 14:36  
-> **Status Geral**: 80% Concluído (V2 Core ✅ → Falta: Deploy Cloud + Hardening)  
+> **Última Atualização**: 2026-02-13  
+> **Status Geral**: 95% Concluído (V2 Prod-Ready ✅ → Falta: Dashboard Cloud)  
 
 ---
 
@@ -11,8 +11,8 @@
 Fase 1: Preparação      [██████████] 100% ✅
 Fase 2: Implementação   [██████████] 100% ✅
 Fase 3: Validação       [██████████] 100% ✅
-Fase 4: Deploy          [███████░░░]  70% 🔄  (Docker Ready, falta Cloud Push)
-Fase 5: Hardening V2.1  [░░░░░░░░░░]   0% ⏳
+Fase 4: Deploy          [██████████] 100% ✅ (API Active)
+Fase 5: Hardening V2.1  [████░░░░░░]  40% 🔄 (Audit ✅)
 ```
 
 ---
@@ -38,17 +38,16 @@ Fase 5: Hardening V2.1  [░░░░░░░░░░]   0% ⏳
 ---
 
 ### 2. Deploy do Backend em Cloud
-
-**Status**: 🔄 Em Progresso (Dockerização completa ✅)
+**Status**: ✅ **CONCLUÍDO** (Deploy no Railway ativo)
 
 **Tarefas:**
-- [x] Escolher plataforma (Railway, Render, AWS, DigitalOcean...) -> *Recomendado Railway*
+- [x] Escolher plataforma (Railway)
 - [x] Criar `Dockerfile` para a API FastAPI
 - [x] Criar `docker-compose.yml` (API + Redis)
 - [x] Configurar variáveis de ambiente em produção (`.env.production.example`)
-- [ ] Deploy e verificar endpoints remotamente
+- [x] Deploy e verificar endpoints remotamente (Status: Active)
 - [ ] Configurar domínio customizado (opcional)
-- [ ] Configurar HTTPS/TLS
+- [ ] Configurar HTTPS/TLS (Automático no Railway)
 
 ---
 
@@ -82,17 +81,13 @@ Fase 5: Hardening V2.1  [░░░░░░░░░░]   0% ⏳
 ## 🟡 PENDÊNCIAS IMPORTANTES (Hardening V2.1)
 
 ### 5. Auditoria Automatizada do Contrato
-
-### 5. Auditoria Automatizada do Contrato
-
-**Status**: ⚠️ Script Pronto / Bloqueado Localmente (Windows)
+**Status**: ✅ **CONCLUÍDO** (Slither Report ✅)
 
 **Tarefas:**
 - [x] Criar script de auditoria: `scripts/security_audit.py`
-- [ ] Instalar Slither: `pip install slither-analyzer` (Falhou no ambiente Windows atual)
-- [ ] Executar: `python scripts/security_audit.py` (Requer Linux ou Docker Container)
-- [ ] Corrigir findings de severidade **High** e **Medium**
-- [ ] Documentar resultados em `docs/security/SLITHER_REPORT.md`
+- [x] Executar via Docker: `run_audit.bat` (Result: 0 High/Med Issues)
+- [x] Corrigir findings de severidade **High** e **Medium** (Nada encontrado)
+- [x] Documentar resultados em `docs/security/AUDIT_REPORT_V2.md`
 
 ---
 
@@ -230,9 +225,9 @@ O projeto tem **74 arquivos .md**, sendo que muitos são versões antigas, rascu
 4. **Corrigir endereço** no README.md
 
 ### 🟡 Fazer ESTA SEMANA (3-4h)
-5. **Dockerizar** a API (Dockerfile + docker-compose)
-6. **Deploy do dashboard** no Streamlit Cloud
-7. **Deploy do backend** em Railway/Render
+5. **Dockerizar** a API (Dockerfile + docker-compose) ✅
+6. **Deploy do backend** em Railway/Render ✅
+7. **Deploy do dashboard** no Streamlit Cloud
 8. **Configurar Redis** para produção
 
 ### 🟢 Fazer NO PRÓXIMO CICLO (V2.1 — 1 semana)

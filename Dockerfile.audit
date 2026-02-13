@@ -1,0 +1,31 @@
+# Estágio para pegar o binário do solc 0.8.24 oficial
+FROM ethereum/solc:0.8.24 AS solc-bin
+
+FROM trailofbits/eth-security-toolbox
+
+USER root
+WORKDIR /app
+
+# 1. Instalar dependências básicas e Node.js para os contratos
+RUN apt-get update && apt-get install -y nodejs npm python3-pip
+
+# 2. Configurar o binário do SOLC manualmente (pula o erro 403 Forbidden do solc-select)
+COPY --from=solc-bin /usr/bin/solc /usr/bin/solc
+RUN chmod +x /usr/bin/solc && \
+    ln -sf /usr/bin/solc /usr/bin/solc-0.8.24 && \
+    ln -sf /usr/bin/solc /root/.crytic/bin/solc
+
+# 3. Instalar OpenZeppelin para Slither encontrar os imports
+# Copiamos apenas o que é necessário para o npm install ser mais rápido
+COPY contracts/package.json ./contracts/
+RUN cd contracts && npm install @openzeppelin/contracts
+
+# 4. Copiar o restante do projeto
+COPY contracts ./contracts
+COPY scripts ./scripts
+
+# 5. Garantir que o Slither está atualizado
+RUN pip3 install --upgrade slither-analyzer
+
+# 6. Executar o script de auditoria
+CMD ["python3", "scripts/security_audit.py"]
